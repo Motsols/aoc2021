@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 type Action struct {
 	Direction string
 	Distance int
@@ -49,33 +50,22 @@ func getSolutionPart2(input []Action) int {
 	return forward * depth
 }
 
-func parseInput(input string) ([]Action, error) {
+func parseInput(input string) ([]Action) {
 	var actions []Action
 	lines := strings.Split(input, "\n")
-	
+
 	for _, line := range lines {
 		var parts = strings.Split(strings.TrimSpace(line), " ")
-		distance, err := strconv.Atoi(parts[1])
-		if err != nil {
-			return nil, err
-		}
+		distance, _ := strconv.Atoi(parts[1])
 		actions = append(actions, Action{parts[0], distance})
 	}
 
-	return actions, nil
+	return actions
 }
 
 func main() {
-	inputBytes, err := ioutil.ReadFile("input.txt")
-	if err != nil {
-		panic("couldn't read input")
-	}
-
-	input, err := parseInput(string(inputBytes))
-	if err != nil {
-		panic("couldn't parse input")
-	}
-
+	inputBytes, _ := ioutil.ReadFile("input.txt")
+	input := parseInput(string(inputBytes))
 	fmt.Println("Go")
 	part := os.Getenv("part")
 
