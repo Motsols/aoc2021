@@ -18,7 +18,7 @@ func getSolutionPart1(input []string) int {
 
 func getSolutionPart2(input []string) int { 
 	forward, depth, aim := 0, 0, 0; 
-	
+
 	for _, action := range input { 
 		var command = strings.Split(strings.TrimSpace(action), " ")
 		distance, _ := strconv.Atoi(command[1])
@@ -33,7 +33,7 @@ func getSolutionPart2(input []string) int {
 }
 
 func parseInput(input string) ([]string) {
-	var actions []string; lines := strings.Split(input, "\r\n")
+	var actions []string; lines := strings.Split(input, "\n")
 	for _, line := range lines { actions = append(actions, line) }
 
 	return actions
