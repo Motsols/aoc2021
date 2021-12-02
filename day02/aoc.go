@@ -1,73 +1,46 @@
-package main
+package main; import ("fmt"; "io/ioutil";"os";"strconv";"strings")
 
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strconv"
-	"strings"
-)
-
-type Action struct {
-	Direction string
-	Distance int
-}
-
-func getSolutionPart1(input []Action) int {
+func getSolutionPart1(input []string) int {
 	forward, depth := 0, 0
 
 	for _, action := range input {
-		if(action.Direction == "forward"){
-			forward += action.Distance
-		}
-		if(action.Direction == "down"){
-			depth += action.Distance
-		}
-		if(action.Direction == "up"){
-			depth -= action.Distance
+		var command = strings.Split(strings.TrimSpace(action), " ")
+		distance, _ := strconv.Atoi(command[1])
+		switch command[0] {
+			case "forward": forward += distance
+			case "down": depth += distance
+			case "up": depth -= distance
 		}
 	}
 
 	return forward * depth
 }
 
-func getSolutionPart2(input []Action) int {
-	forward, depth, aim := 0, 0, 0
-
-	for _, action := range input {
-		if(action.Direction == "forward"){
-			forward += action.Distance
-			depth += aim * action.Distance
+func getSolutionPart2(input []string) int { 
+	forward, depth, aim := 0, 0, 0; 
+	
+	for _, action := range input { 
+		var command = strings.Split(strings.TrimSpace(action), " ")
+		distance, _ := strconv.Atoi(command[1])
+		switch command[0] {
+			case "forward": forward += distance; depth += aim * distance;
+			case "down": aim += distance
+			case "up": aim -= distance
 		}
-		if(action.Direction == "down"){
-			aim += action.Distance
-		}
-		if(action.Direction == "up"){
-			aim -= action.Distance
-		}
-	}
-
+	} 
+		
 	return forward * depth
 }
 
-func parseInput(input string) ([]Action) {
-	var actions []Action
-	lines := strings.Split(input, "\n")
-
-	for _, line := range lines {
-		var parts = strings.Split(strings.TrimSpace(line), " ")
-		distance, _ := strconv.Atoi(parts[1])
-		actions = append(actions, Action{parts[0], distance})
-	}
+func parseInput(input string) ([]string) {
+	var actions []string; lines := strings.Split(input, "\r\n")
+	for _, line := range lines { actions = append(actions, line) }
 
 	return actions
 }
 
 func main() {
-	inputBytes, _ := ioutil.ReadFile("input.txt")
-	input := parseInput(string(inputBytes))
-	fmt.Println("Go")
-	part := os.Getenv("part")
+	inputBytes, _ := ioutil.ReadFile("input.txt"); input := parseInput(string(inputBytes)); fmt.Println("Go"); part := os.Getenv("part")
 
 	if part == "part2" {
 		fmt.Println(getSolutionPart2(input))
