@@ -101,7 +101,7 @@ func getLines(input []string, pickValue string, pickPosition int) []string {
 }
 
 func parseInput(input string) ([]string) {
-	lines := strings.Split(input, "\r\n")
+	lines := strings.Split(input, "\n")
 
 	return lines
 }
