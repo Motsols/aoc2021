@@ -1,5 +1,5 @@
-package main; import ("fmt";"io/ioutil";"os";"strconv";"strings");
-
+package main;
+import ("fmt";"io/ioutil";"os";"strconv";"strings");
 
 func getSolutionPart1(input []string) int {
 	lineLength := len(input[0])
@@ -18,11 +18,11 @@ func getSolutionPart1(input []string) int {
 	gamma, epsilon := "", ""
 	for i := 0; i < lineLength; i++ {
 		if positions[i][0] > positions[i][1] {
-			gamma = gamma + "0"
-			epsilon = epsilon + "1"
+			gamma += "0"
+			epsilon += "1"
 		} else { 
-			gamma = gamma + "1"
-			epsilon = epsilon + "0"
+			gamma += "1"
+			epsilon += "0"
 		}
 	}
 
