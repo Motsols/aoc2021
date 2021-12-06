@@ -8,37 +8,33 @@ import (
 	"strings"
 )
 
-func getSolution(input []int, days int) int {
-	// dayGroup := 2
-	// miniDayz := days/dayGroup // 80/4=20
+func getSolution(startingFish []int, days int) int {
+	fishPregnancies := map[int]int{}
+	births := 0
 
-	for i := 0; i < days; i++ {
-		for fish, value := range input {
-			if value == 0{
-				input[fish] = 6
-				input = append(input, 8)
-			} else {
-				input[fish]--
-			}
-		}
+	for _ , daysLeft := range startingFish {
+		fishPregnancies[daysLeft]++
 	}
 
-	// for i := 0; i < miniDayz; i++ {
-	// 	for fish, value := range input { // 3, 4,3,1,2
-	// 		pregnancy := value-dayGroup
-	// 		// fmt.Printf("Pregnancy: %d \r\n", pregnancy)
-	// 		if pregnancy <= 0{
-	// 			// fmt.Printf("Day %d. Fish %d Pregnancy was %d now %d, will now get 6-pregnancy for a total of %d(6). New fish will have %d(8) \r\n", i*dayGroup, fish, input[fish], pregnancy, 6+pregnancy, 8+pregnancy)
-	// 			input[fish] = 6+pregnancy
-	// 			input = append(input, 8+pregnancy)
-	// 		} else {
-	// 			// fmt.Printf("Day %d. Fish %d Not giving birth yet. Pregnancy was %d now %d \r\n", i*dayGroup, fish, input[fish], pregnancy)
-	// 			input[fish] = pregnancy
-	// 		}
-	// 	}
-	// }
+	for i := 0; i < days; i++ {
+		births = fishPregnancies[0]
+		fishPregnancies[0] = fishPregnancies[1]
+		fishPregnancies[1] = fishPregnancies[2]
+		fishPregnancies[2] = fishPregnancies[3]
+		fishPregnancies[3] = fishPregnancies[4]
+		fishPregnancies[4] = fishPregnancies[5]
+		fishPregnancies[5] = fishPregnancies[6]
+		fishPregnancies[6] = fishPregnancies[7] + births // parent immediately gets pregnant again. All teenagers become pregnant on the same day. Maybe with the same father (drama)
+		fishPregnancies[7] = fishPregnancies[8] // Teenager day 2
+		fishPregnancies[8] = births // Childhood day 1
+	}
 
-	return len(input)
+	totalFishes := 0
+	for _, numberOfFishWithXDaysLeft := range fishPregnancies {
+		totalFishes += numberOfFishWithXDaysLeft
+	}
+
+	return totalFishes
 }
 
 func parseInput(input string) ([]int, error) {
@@ -59,7 +55,7 @@ func parseInput(input string) ([]int, error) {
 }
 
 func main() {
-	inputBytes, err := ioutil.ReadFile("testinput.txt")
+	inputBytes, err := ioutil.ReadFile("input.txt")
 	if err != nil {
 		panic("couldn't read input")
 	}
@@ -72,11 +68,9 @@ func main() {
 	fmt.Println("Go")
 	part := os.Getenv("part")
 
-	// fmt.Println(getSolution(input, 256))
 	if part == "part2" {
 		fmt.Println(getSolution(input, 256))
 	} else {
-		fmt.Println("Go")
 		fmt.Println(getSolution(input, 80))
 	}
 }
