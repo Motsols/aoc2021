@@ -1,12 +1,5 @@
 package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strconv"
-	"strings"
-)
+import ( "fmt"; "io/ioutil"; "os"; "strconv"; "strings" )
 
 func getSolution(startingFish []int, days int) int {
 	fishPregnancies := map[int]int{}
@@ -44,9 +37,7 @@ func parseInput(input string) ([]int, error) {
 
 	for _, line := range lines {
 		i, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
-		}
+		if err != nil { return nil, err }
 
 		ints = append(ints, i)
 	}
@@ -56,21 +47,13 @@ func parseInput(input string) ([]int, error) {
 
 func main() {
 	inputBytes, err := ioutil.ReadFile("input.txt")
-	if err != nil {
-		panic("couldn't read input")
-	}
+	if err != nil { panic("couldn't read input") }
 
 	input, err := parseInput(string(inputBytes))
-	if err != nil {
-		panic("couldn't parse input")
-	}
+	if err != nil { panic("couldn't parse input") }
 
-	fmt.Println("Go")
 	part := os.Getenv("part")
 
-	if part == "part2" {
-		fmt.Println(getSolution(input, 256))
-	} else {
-		fmt.Println(getSolution(input, 80))
-	}
+	if part == "part2" { fmt.Println(getSolution(input, 256))
+	} else { fmt.Println(getSolution(input, 80)) }
 }
