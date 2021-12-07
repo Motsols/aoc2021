@@ -1,16 +1,25 @@
-package main;
-import ("fmt";"io/ioutil";"os";"strconv";"strings");
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+	"strings"
+)
 
 func getSolutionPart1(input []string) int {
 	lineLength := len(input[0])
 	var positions = make([][2]int, lineLength)
 
 	for _, line := range input {
-		var readings = strings.Split(line, "");
+		var readings = strings.Split(line, "")
 		for x, reading := range readings {
 			switch reading {
-				case "0": positions[x][0]++
-				case "1": positions[x][1]++
+			case "0":
+				positions[x][0]++
+			case "1":
+				positions[x][1]++
 			}
 		}
 	}
@@ -20,7 +29,7 @@ func getSolutionPart1(input []string) int {
 		if positions[i][0] > positions[i][1] {
 			gamma += "0"
 			epsilon += "1"
-		} else { 
+		} else {
 			gamma += "1"
 			epsilon += "0"
 		}
@@ -38,7 +47,7 @@ func getSolutionPart2(input []string) int {
 	co2Lines := input
 
 	for i := 0; i < lineLength; i++ {
-		if(len(oxygenLines) == 1) {
+		if len(oxygenLines) == 1 {
 			break
 		}
 
@@ -52,10 +61,10 @@ func getSolutionPart2(input []string) int {
 		oxygenLines = getLines(oxygenLines, mostCommon, i)
 	}
 	for i := 0; i < lineLength; i++ {
-		if(len(co2Lines) == 1) {
+		if len(co2Lines) == 1 {
 			break
 		}
-		
+
 		positionCounts := getPositionCount(co2Lines, i)
 
 		leastCommon := "0"
@@ -76,11 +85,11 @@ func getPositionCount(input []string, position int) [2]int {
 	var positionCounts [2]int
 
 	for _, line := range input {
-		var readings = strings.Split(line, "");
-		if (readings[position] == "0") {
-			positionCounts[0]++;
+		var readings = strings.Split(line, "")
+		if readings[position] == "0" {
+			positionCounts[0]++
 		} else {
-			positionCounts[1]++;
+			positionCounts[1]++
 		}
 	}
 
@@ -89,9 +98,9 @@ func getPositionCount(input []string, position int) [2]int {
 
 func getLines(input []string, pickValue string, pickPosition int) []string {
 	var remainingLines []string
-	
+
 	for _, line := range input {
-		var readings = strings.Split(line, "");
+		var readings = strings.Split(line, "")
 		if readings[pickPosition] == pickValue {
 			remainingLines = append(remainingLines, line)
 		}
@@ -100,7 +109,7 @@ func getLines(input []string, pickValue string, pickPosition int) []string {
 	return remainingLines
 }
 
-func parseInput(input string) ([]string) {
+func parseInput(input string) []string {
 	lines := strings.Split(input, "\n")
 
 	return lines
@@ -114,7 +123,6 @@ func main() {
 
 	input := parseInput(string(inputBytes))
 
-	fmt.Println("Go")
 	part := os.Getenv("part")
 
 	if part == "part2" {
