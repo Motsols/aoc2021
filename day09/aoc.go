@@ -1,9 +1,14 @@
 package main;
-import ("fmt"; "io/ioutil";"strconv";"os";"strings")
+import ("fmt"; "io/ioutil";"strconv";"os";"strings";"sort")
 
 const (
 	rowCount = 100
 	columnCount = 100
+)
+
+var (
+	basinSizes []int
+	positionsInBasins = make(map[string]bool)
 )
 
 func main() {
@@ -20,9 +25,6 @@ func main() {
 
 func parseInput(input string) [][columnCount]int {
 	lines := strings.Split(input, "\r\n")
-	// rowCount = len(lines) - 1
-	// columnCount = len(lines[0]) - 1
-	// fmt.Printf("rows %d and %d, cols %d and %d \r\n", len(lines), rowCount, len(lines[0]), columnCount)
 	heightLines := make([][columnCount]int, rowCount)
 	
 	for i, line := range lines { 
@@ -39,12 +41,8 @@ func parseInput(input string) [][columnCount]int {
 func getSolutionPart1(heightLines [][columnCount]int) int {
 	riskLevel := 0
 	for i, row := range heightLines {
-		// fmt.Printf("iteration %d, line %d \r\n", i, row)
-		// var heights = strings.Split(row, "")
 		for j, value := range row {
-			// fmt.Printf("row %d id '%s', col %d, val %s \r\n", i, row, j, value)
-			
-			if left(i, j, value, heightLines) && right(i, j, value, heightLines) && above(i, j, value, heightLines) && below(i, j, value, heightLines) {
+			if isBasin(i, j, value, heightLines) {
 				riskLevel += 1 + value
 			}
 		}
@@ -53,64 +51,84 @@ func getSolutionPart1(heightLines [][columnCount]int) int {
 	return riskLevel
 }
 
-func left(i int, j int, height int, heightLines [][columnCount]int) bool {
-	return compare(i, j-1, height, heightLines)
-}
-func right(i int, j int, height int, heightLines [][columnCount]int) bool {
-	return compare(i, j+1, height, heightLines)
-}
-func above(i int, j int, height int, heightLines [][columnCount]int) bool {
-	return compare(i-1, j, height, heightLines)
-}
-func below(i int, j int, height int, heightLines [][columnCount]int) bool {
-	return compare(i+1, j, height, heightLines)
-}
-
-func compare(i int, j int, height int, heightLines [][columnCount]int) bool {
-	if i < 0 || j < 0 || i > rowCount -1 || j > columnCount -1 {
-		return true
+func getSolutionPart2(heightLines [][columnCount]int) int { 
+	for i, row := range heightLines {
+		for j, value := range row {
+			if isBasin(i, j, value, heightLines) {
+				clearBasinsMap()
+				getBasinSize(i, j, value, heightLines)
+				
+				if len(positionsInBasins) > 0 {
+					basinSizes = append(basinSizes, len(positionsInBasins) +1)
+				}
+			}
+		}
 	}
 
-	if height < heightLines[i][j] {
+	sort.Ints(basinSizes)
+	numOfBasins := len(basinSizes)
+	return basinSizes[numOfBasins-1] * basinSizes[numOfBasins-2] * basinSizes[numOfBasins-3]
+}
+
+func isBasin(i int, j int, value int, heightLines [][columnCount]int) bool {
+	return left(i, j, value, heightLines, false) && right(i, j, value, heightLines, false) && above(i, j, value, heightLines, false) && below(i, j, value, heightLines, false)
+}
+
+func left(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
+	return compare(i, j-1, height, heightLines, withBasins)
+}
+func right(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
+	return compare(i, j+1, height, heightLines, withBasins)
+}
+func above(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
+	return compare(i-1, j, height, heightLines, withBasins)
+}
+func below(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
+	return compare(i+1, j, height, heightLines, withBasins)
+}
+
+func compare(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
+	if i < 0 || j < 0 || i > rowCount -1 || j > columnCount -1 {
+		if withBasins {
+			return false
+		} else {
+			return true
+		}
+	}
+
+	if withBasins && heightLines[i][j] > height && heightLines[i][j] != 9 {
+		positionString := strconv.Itoa(i) + strconv.Itoa(j)
+		_, found := positionsInBasins[positionString]
+		
+		if found == false {
+			positionsInBasins[positionString] = true
+		}
+		
+		return true
+	} else if !withBasins && height < heightLines[i][j] {
 		return true
 	}
 
 	return false
 }
 
-// func checkLeft(i int, j int, heights int) bool {
-// 	// func checkLeft(height int, i int, j int, rows int, lineLength int) bool {
-// 	// if i < 0 || j < 0 || i == rows || j == lineLength {
-// 	// 	return false
-// 	// }
-// 	if j == 0 {
-// 		return false
-// 	}
-	
-
-	
-// 	return false
-// }
-
-func getSolutionPart2(heightLines [][columnCount]int) int { 
-	// var basins []int
-	// for i, row := range heightLines {
-	// 	// fmt.Printf("iteration %d, line %d \r\n", i, row)
-	// 	// var heights = strings.Split(row, "")
-	// 	for j, value := range row {
-	// 		// fmt.Printf("row %d id '%s', col %d, val %s \r\n", i, row, j, value)
-			
-	// 		if left(i, j, value, heightLines) && right(i, j, value, heightLines) && above(i, j, value, heightLines) && below(i, j, value, heightLines) {
-	// 			getBasinSize(i, j, value, heightLines)
-	// 			size = 1
-	// 			basins = append(basins, 1)
-	// 		}
-	// 	}
-	// }
-	
-	return 1
+func getBasinSize(i int, j int, height int, heightLines [][columnCount]int) {
+		if !positionsInBasins[strconv.Itoa(i) + strconv.Itoa(j-1)] && left(i, j, height, heightLines, true) {
+			getBasinSize(i, j-1, height, heightLines)
+		}
+		if !positionsInBasins[strconv.Itoa(i) + strconv.Itoa(j+1)] && right(i, j, height, heightLines, true) {
+			getBasinSize(i, j+1, height, heightLines)
+		}
+		if !positionsInBasins[strconv.Itoa(i-1) + strconv.Itoa(j)] && above(i, j, height, heightLines, true) {
+			getBasinSize(i-1, j, height, heightLines)
+		}
+		if !positionsInBasins[strconv.Itoa(i+1) + strconv.Itoa(j)] && below(i, j, height, heightLines, true) {
+			getBasinSize(i+1, j, height, heightLines)
+		}
 }
 
-// func getBasinSize(i int, j int, height int, heightLines [][columnCount]int) int {
-
-// }
+func clearBasinsMap() {
+	for key, _ := range positionsInBasins {
+		delete(positionsInBasins, key)
+	}
+}
