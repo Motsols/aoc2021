@@ -20,7 +20,7 @@ func main() {
 	}
 }
 func parseInput(input string) ([]string, []string) {
-	lines := strings.Split(strings.TrimSpace(input), "\r\n")
+	lines := strings.Split(strings.TrimSpace(input), "\n")
 	var numbers, out = make([]string, len(lines)), make([]string, len(lines))
 
 	for i, line := range lines {
