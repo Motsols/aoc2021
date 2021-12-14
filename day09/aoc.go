@@ -1,19 +1,27 @@
-package main;
-import ("fmt"; "io/ioutil";"strconv";"os";"strings";"sort")
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 const (
-	rowCount = 100
+	rowCount    = 100
 	columnCount = 100
 )
 
 var (
-	basinSizes []int
+	basinSizes        []int
 	positionsInBasins = make(map[string]bool)
 )
 
 func main() {
-	inputBytes, _ := ioutil.ReadFile("input.txt");
-	input := parseInput(string(inputBytes)); 
+	inputBytes, _ := ioutil.ReadFile("input.txt")
+	input := parseInput(string(inputBytes))
 	part := os.Getenv("part")
 
 	if part == "part2" {
@@ -24,10 +32,10 @@ func main() {
 }
 
 func parseInput(input string) [][columnCount]int {
-	lines := strings.Split(input, "\r\n")
+	lines := strings.Split(input, "\n")
 	heightLines := make([][columnCount]int, rowCount)
-	
-	for i, line := range lines { 
+
+	for i, line := range lines {
 		var cols = strings.Split(line, "")
 		for j, col := range cols {
 			height, _ := strconv.Atoi(col)
@@ -47,19 +55,19 @@ func getSolutionPart1(heightLines [][columnCount]int) int {
 			}
 		}
 	}
-	
+
 	return riskLevel
 }
 
-func getSolutionPart2(heightLines [][columnCount]int) int { 
+func getSolutionPart2(heightLines [][columnCount]int) int {
 	for i, row := range heightLines {
 		for j, value := range row {
 			if isBasin(i, j, value, heightLines) {
 				clearBasinsMap()
 				getBasinSize(i, j, value, heightLines)
-				
+
 				if len(positionsInBasins) > 0 {
-					basinSizes = append(basinSizes, len(positionsInBasins) +1)
+					basinSizes = append(basinSizes, len(positionsInBasins)+1)
 				}
 			}
 		}
@@ -88,7 +96,7 @@ func below(i int, j int, height int, heightLines [][columnCount]int, withBasins 
 }
 
 func compare(i int, j int, height int, heightLines [][columnCount]int, withBasins bool) bool {
-	if i < 0 || j < 0 || i > rowCount -1 || j > columnCount -1 {
+	if i < 0 || j < 0 || i > rowCount-1 || j > columnCount-1 {
 		if withBasins {
 			return false
 		} else {
@@ -99,11 +107,11 @@ func compare(i int, j int, height int, heightLines [][columnCount]int, withBasin
 	if withBasins && heightLines[i][j] > height && heightLines[i][j] != 9 {
 		positionString := strconv.Itoa(i) + strconv.Itoa(j)
 		_, found := positionsInBasins[positionString]
-		
+
 		if found == false {
 			positionsInBasins[positionString] = true
 		}
-		
+
 		return true
 	} else if !withBasins && height < heightLines[i][j] {
 		return true
@@ -113,18 +121,18 @@ func compare(i int, j int, height int, heightLines [][columnCount]int, withBasin
 }
 
 func getBasinSize(i int, j int, height int, heightLines [][columnCount]int) {
-		if !positionsInBasins[strconv.Itoa(i) + strconv.Itoa(j-1)] && left(i, j, height, heightLines, true) {
-			getBasinSize(i, j-1, height, heightLines)
-		}
-		if !positionsInBasins[strconv.Itoa(i) + strconv.Itoa(j+1)] && right(i, j, height, heightLines, true) {
-			getBasinSize(i, j+1, height, heightLines)
-		}
-		if !positionsInBasins[strconv.Itoa(i-1) + strconv.Itoa(j)] && above(i, j, height, heightLines, true) {
-			getBasinSize(i-1, j, height, heightLines)
-		}
-		if !positionsInBasins[strconv.Itoa(i+1) + strconv.Itoa(j)] && below(i, j, height, heightLines, true) {
-			getBasinSize(i+1, j, height, heightLines)
-		}
+	if !positionsInBasins[strconv.Itoa(i)+strconv.Itoa(j-1)] && left(i, j, height, heightLines, true) {
+		getBasinSize(i, j-1, height, heightLines)
+	}
+	if !positionsInBasins[strconv.Itoa(i)+strconv.Itoa(j+1)] && right(i, j, height, heightLines, true) {
+		getBasinSize(i, j+1, height, heightLines)
+	}
+	if !positionsInBasins[strconv.Itoa(i-1)+strconv.Itoa(j)] && above(i, j, height, heightLines, true) {
+		getBasinSize(i-1, j, height, heightLines)
+	}
+	if !positionsInBasins[strconv.Itoa(i+1)+strconv.Itoa(j)] && below(i, j, height, heightLines, true) {
+		getBasinSize(i+1, j, height, heightLines)
+	}
 }
 
 func clearBasinsMap() {
