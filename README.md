@@ -1,3 +1,12 @@
+# Advent of Code 2021
+This is me learning for the first time about GO, from day one when I typed my first line of code in the language and onwards to learn more.
+
+GO was actually easier to grasp the basics of than expected. I like how easy the language is and how obvious the code is (well, most days at least).
+
+This Advent of Code was extended by my company Cygni and made into something more fun by comparing execution times and lines of code (hence why day 1 looks as it does. I discovered semicolon in GO.)
+
+Following is informational stuff from Cygni, in Swedish:  
+
 # Exempelrepo för Cygnifierad Advent of Code
 Detta repo är ett exempel på hur du ska strukturera ditt repo för att dina lösningar på [Advent of Code](https://adventofcode.com/) ska kunna analyseras på ett korrekt sätt av den [Cygnifierade varianten](https://cygni.github.io/aoc).
 
