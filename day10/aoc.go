@@ -20,7 +20,7 @@ func main() {
 	}
 }
 func parseInput(input string) (map[string]uint64, map[string]string) {
-	lines := strings.Split(strings.TrimSpace(input), "\r\n")
+	lines := strings.Split(strings.TrimSpace(input), "\n")
 	var templatePairs, insertions = make(map[string]uint64), make(map[string]string)
 
 	for i, line := range lines {
